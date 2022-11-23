@@ -1,5 +1,5 @@
-﻿using ETicaretAPI.Application.Interfaces;
-using ETicaretAPI.Doamin.Entities.Common;
+﻿using ETicaretAPI.Application.Repositories;
+using ETicaretAPI.Domain.Entities.Common;
 using ETicaretAPI.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,23 +13,24 @@ namespace ETicaretAPI.Persistence.Repositories
 {
     public class ReadRepository<T> : IReadRepository<T> where T : BaseEntity
     {
-        private readonly ETicaretAPIDbContext _context;
+        readonly private ETicaretAPIDbContext _context;
 
         public ReadRepository(ETicaretAPIDbContext context)
         {
             _context = context;
         }
+
         public DbSet<T> Table => _context.Set<T>();
 
         public IQueryable<T> GetAll()
-            => Table;
-        public IQueryable<T> GetWhere(Expression<Func<T, bool>> metod)
-            => Table.Where(metod);
-        public Task<T> GetSingLeAsync(Expression<Func<T, bool>> model)
-            => Table.FirstOrDefaultAsync(model);
+            => Table.AsNoTracking();
+        public IQueryable<T> GetWhere(Expression<Func<T, bool>> model)
+           => Table.Where(model);
+        public async Task<T> GetSingleAsync(Expression<Func<T, bool>> model)
+              => await Table.FirstOrDefaultAsync(model);
+        public async Task<T> GetByIdAsync(string id)
+            =>await Table.FindAsync(Guid.Parse(id));
 
-        public Task<T> GetByIdAsync(string Id)
-            => Table.FirstOrDefaultAsync(p => p.Id == Guid.Parse(Id));
-
+        
     }
 }

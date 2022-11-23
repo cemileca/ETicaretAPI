@@ -8,13 +8,12 @@ using System.Threading.Tasks;
 
 namespace ETicaretAPI.Application.Repositories
 {
-    public interface IReadRepository<T>:IRepository<T> where T : BaseEntity
+    public interface IReadRepository<T> : IRepository<T> where T : BaseEntity
     {
         IQueryable<T> GetAll();
-        IQueryable<T> GetWere(Expression<Func<T, bool>> model);
+        IQueryable<T> GetWhere(Expression<Func<T, bool>> model);
         Task<T> GetSingleAsync(Expression<Func<T, bool>> model);
-        Task<T>GetByIdAssync(string id);
-
+        Task<T> GetByIdAsync(string id);
 
     }
 }

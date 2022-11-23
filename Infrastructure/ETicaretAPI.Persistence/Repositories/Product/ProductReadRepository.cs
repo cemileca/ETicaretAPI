@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ETicaretAPI.Persistence.Repositories
 {
-    public class ProductReadRepository : ReadRepository<Product>,IProductReadRepository
+    public class ProductReadRepository : ReadRepository<Product>, IProductReadRepository
     {
         public ProductReadRepository(ETicaretAPIDbContext context) : base(context)
         {

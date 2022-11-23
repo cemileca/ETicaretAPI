@@ -1,12 +1,8 @@
-﻿
-
-using ETicaretAPI.Application.Repositories;
-using Microsoft.AspNetCore.Http;
+﻿using ETicaretAPI.Application.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETicaretAPI.API.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
@@ -18,16 +14,18 @@ namespace ETicaretAPI.API.Controllers
             _productReadRepository = productReadRepository;
             _productWriteRepository = productWriteRepository;
         }
+
         [HttpGet]
-        public async void Get()
+        public async Task Get()
         {
             await _productWriteRepository.AddRangeAsync(new()
             {
-                new(){Id=Guid.NewGuid(), CreateDate=DateTime.UtcNow, Name="Product 7",  Price=125, Stock=658},
-                new(){Id=Guid.NewGuid(), CreateDate=DateTime.UtcNow, Name="Product 8",  Price=15, Stock=600},
-                new(){Id=Guid.NewGuid(), CreateDate=DateTime.UtcNow, Name="Product 9",  Price=185, Stock=450},
+                new(){ Id=Guid.NewGuid(), CreateDate=DateTime.UtcNow, Name="Product 1", Price=101, Stock=65},
+                new(){ Id=Guid.NewGuid(), CreateDate=DateTime.UtcNow, Name="Product 2",Price=305, Stock=72},
+                new(){ Id=Guid.NewGuid(), CreateDate=DateTime.UtcNow, Name="Product 1",Price=101, Stock=230}
             });
-            var count = await _productWriteRepository.SaveAsync();
+            var count = await _productWriteRepository.SaveChangesAsync();
         }
+
     }
 }

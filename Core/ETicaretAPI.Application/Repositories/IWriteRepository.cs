@@ -9,13 +9,14 @@ namespace ETicaretAPI.Application.Repositories
 {
     public interface IWriteRepository<T>:IRepository<T> where T : BaseEntity
     {
-        Task<bool> AddAsync(T entity);
-        Task<bool> AddRangeAsync(List<T> data);
-        bool Remove(T model);
-        bool RemoveRange(List<T> data);
-        Task<bool> RemoveById(string Id);
+        Task<bool> AddAsync(T model);
+        Task<bool> AddRangeAsync(HashSet<T> datas);
         bool Update(T model);
-
-        Task<int> SaveAsync();
+        Task<bool> UpdateByIdAsync(string id);
+        bool UpdateRange(HashSet<T> datas);
+        bool Remove(T model);
+        Task<bool> RemoveByIdAsync(string id);
+        bool RemoveRange(HashSet<T> datas);
+        Task<int> SaveChangesAsync();
     }
 }

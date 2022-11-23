@@ -1,5 +1,5 @@
-﻿using ETicaretAPI.Application.Interfaces;
-using ETicaretAPI.Doamin.Entities.Common;
+﻿using ETicaretAPI.Application.Repositories;
+using ETicaretAPI.Domain.Entities.Common;
 using ETicaretAPI.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -13,25 +13,26 @@ namespace ETicaretAPI.Persistence.Repositories
 {
     public class WriteRepository<T> : IWriteRepository<T> where T : BaseEntity
     {
-        private readonly ETicaretAPIDbContext _context;
+        readonly private ETicaretAPIDbContext _context;
 
         public WriteRepository(ETicaretAPIDbContext context)
         {
             _context = context;
         }
+
         public DbSet<T> Table => _context.Set<T>();
 
-        public async Task<bool> AddSync(T model)
+        public async Task<bool> AddAsync(T model)
         {
-            EntityEntry<T> entityEntry =await Table.AddAsync(model);
+            EntityEntry<T> entityEntry = await Table.AddAsync(model);
             return entityEntry.State == EntityState.Added;
         }
-        public async Task<bool> AddRangeAsync(List<T> data)
+
+        public async Task<bool> AddRangeAsync(HashSet<T> datas)
         {
-          await  Table.AddRangeAsync(data);
+            await Table.AddRangeAsync(datas);
             return true;
         }
-            
 
         public bool Remove(T model)
         {
@@ -39,13 +40,36 @@ namespace ETicaretAPI.Persistence.Repositories
             return entityEntry.State == EntityState.Deleted;
         }
 
-      
+        public async Task<bool> RemoveByIdAsync(string id)
+        {
+            T model = await Table.FindAsync(Guid.Parse(id));
+            return Remove(model);
+        }
+
+        public bool RemoveRange(HashSet<T> datas)
+        {
+            Table.RemoveRange(datas);
+            return true;
+        }
         public bool Update(T model)
         {
-          EntityEntry<T> entityEntry=  Table.Update(model);
+            EntityEntry<T> entityEntry = Table.Update(model);
             return entityEntry.State == EntityState.Modified;
         }
 
-       
+        public async Task<bool> UpdateByIdAsync(string id)
+        {
+            T model = await Table.FindAsync(Guid.Parse(id));
+            return Update(model);
+        }
+
+        public bool UpdateRange(HashSet<T> datas)
+        {
+            Table.UpdateRange(datas);
+            return true;
+        }
+
+        public async Task<int> SaveChangesAsync()
+            => await _context.SaveChangesAsync();
     }
 }
