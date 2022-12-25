@@ -7,20 +7,32 @@ import { AppComponent } from './app.component';
 import { UiModule } from './ui/ui.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ComponentsModule } from "./ui/components/components.module";
+import { ToastrModule } from 'ngx-toastr';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
     declarations: [
         AppComponent
+       
     ],
-    providers: [],
+    providers: [
+        { provide:"baseUrl", useValue:"https://localhost:7186/api", multi:true }
+    ],
     bootstrap: [AppComponent],
     imports: [
         BrowserModule,
         AppRoutingModule,
+        BrowserAnimationsModule,
+        ComponentsModule,
         AdminModule,
         UiModule,
-        BrowserAnimationsModule,
-        ComponentsModule
+        ToastrModule.forRoot(),
+        NgxSpinnerModule,
+        HttpClientModule
+
+
     ]
 })
 export class AppModule { }

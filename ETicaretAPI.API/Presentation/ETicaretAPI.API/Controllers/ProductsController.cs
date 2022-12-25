@@ -1,5 +1,8 @@
 ﻿using ETicaretAPI.Application.Repositories;
+using ETicaretAPI.Application.ViewModels.Products;
+using ETicaretAPI.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ETicaretAPI.API.Controllers
 {
@@ -16,16 +19,50 @@ namespace ETicaretAPI.API.Controllers
         }
 
         [HttpGet]
-        public async Task Get()
+
+        public async Task<IActionResult> Get()
         {
-            await _productWriteRepository.AddRangeAsync(new()
-            {
-                new(){ Id=Guid.NewGuid(), CreateDate=DateTime.UtcNow, Name="Product 1", Price=101, Stock=65},
-                new(){ Id=Guid.NewGuid(), CreateDate=DateTime.UtcNow, Name="Product 2",Price=305, Stock=72},
-                new(){ Id=Guid.NewGuid(), CreateDate=DateTime.UtcNow, Name="Product 1",Price=101, Stock=230}
-            });
-            var count = await _productWriteRepository.SaveChangesAsync();
+
+            return Ok(_productReadRepository.GetAll(false));
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(string id)
+        {
+            
+            return Ok(await _productReadRepository.GetByIdAsync(id,false));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Post(VM_Create_Product model)
+        {
+            await _productWriteRepository.AddAsync(new()
+            {
+                Name = model.Name,
+                Stock = model.Stock,
+                Price = model.Price
+            });
+            await _productWriteRepository.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Put(VM_Update_Product model)
+        {
+            Product product = await _productReadRepository.GetByIdAsync(model.Id);
+            product.Name = model.Name;
+            product.Stock = model.Stock;
+            product.Price = model.Price;
+            await _productWriteRepository.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            await _productWriteRepository.RemoveByIdAsync(id);
+            await _productWriteRepository.SaveChangesAsync();
+            return Ok();
+        }
     }
 }

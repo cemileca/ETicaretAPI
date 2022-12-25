@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LayoutModule } from './layout/layout.module';
 import { ComponentsModule } from './components/components.module';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 
@@ -13,7 +14,9 @@ import { ComponentsModule } from './components/components.module';
   ],
   exports:[
     LayoutModule,
-    ComponentsModule
+    ComponentsModule,
+    NgxSpinnerModule
+    
   ]
 })
 export class AdminModule { }

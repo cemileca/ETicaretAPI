@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './admin/components/dashboard/dashboard.component';
 import { LayoutComponent } from './admin/layout/layout.component';
 import { HomeComponent } from './ui/components/home/home.component';
+import { DenemeComponent } from './ui/deneme/deneme.component';
 
 
 const routes: Routes = [
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'baskets', loadChildren: () => import('./ui/components/baskets/baskets.module').then(module => module.BasketsModule), },
   { path: 'products', loadChildren: () => import('./ui/components/products/products.module').then(module => module.ProductsModule) },
+  { path: 'deneme',component:DenemeComponent}
 ];
 
 @NgModule({
